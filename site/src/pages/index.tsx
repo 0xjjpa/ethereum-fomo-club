@@ -24,6 +24,17 @@ import { DarkModeSwitch } from '../components/DarkModeSwitch'
 import { Formik, Field, Form } from "formik";
 import { useState } from 'react'
 
+async function API(ts) {
+  // Format - https://api.coinbase.com/v2/prices/ETH-USD/spot?date=YYYY-MM-DD
+  const then = await fetch(`https://api.coinbase.com/v2/prices/ETH-USD/spot?date=${ts}`).then(res => res.json())
+  const d = new Date();
+  const offset = d.getTimezoneOffset()
+  const actualDate = new Date(d.getTime() - (offset*60*1000))
+  const newTs = (actualDate.toISOString().split('T')[0])
+  const today = await fetch(`https://api.coinbase.com/v2/prices/ETH-USD/spot?date=${newTs}`).then(res => res.json())
+  return ({ then: then.data, today: today.data })
+}
+
 const options: UseInputOptions = {
   // Select today as default
   defaultSelected: new Date(),
@@ -100,7 +111,9 @@ const Index = () => {
             setTimeout(async () => {
               const { ts, amount } = values;
               const actualTs = ts.toISOString().split('T')[0]
-              const response = await (await fetch(`/api/${actualTs}`)).json()
+
+              const response = await API(actualTs);
+
               console.log("Response", response);
               setMoneyz(amount/response.then.amount * response.today.amount)
               actions.setSubmitting(false)
