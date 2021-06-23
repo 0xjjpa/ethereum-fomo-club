@@ -1,6 +1,8 @@
 import {
   Link as ChakraLink,
   Text,
+  Flex,
+  Popover, PopoverContent, PopoverTrigger,
   FormErrorMessage,
   FormControl,
   FormLabel,
@@ -10,6 +12,11 @@ import {
 } from '@chakra-ui/react'
 import { LinkIcon, CalendarIcon } from '@chakra-ui/icons'
 import Head from 'next/head'
+import { DayPicker, useInput, UseInputOptions } from "react-day-picker";
+import "react-day-picker/style.css";
+import { format } from "date-fns";
+import { css } from "@emotion/react";
+
 
 import { Hero } from '../components/Hero'
 import { Container } from '../components/Container'
@@ -17,11 +24,22 @@ import { DarkModeSwitch } from '../components/DarkModeSwitch'
 import { Formik, Field, Form } from "formik";
 import { useState } from 'react'
 
+const options: UseInputOptions = {
+  // Select today as default
+  defaultSelected: new Date(),
+  // Limit the valid dates
+  fromYear: 2015,
+  toYear: 2021,
+  format: "PP",
+  // Make the selection mandatory.
+  required: true
+};
 
 const Index = () => {
-  const [ts, setTs] = useState(undefined);
+  const [ts, setTs] = useState(new Date());
   const [amount, setAmount] = useState(undefined);
   const [moneyz, setMoneyz] = useState(0);
+  const input = useInput(options);
 
   function validateAmount(value: string) {
     console.log('value', value)
@@ -49,11 +67,15 @@ const Index = () => {
     }
     const offset = d.getTimezoneOffset()
     const actualDate = new Date(d.getTime() - (offset*60*1000))
-    setTs(actualDate.toISOString().split('T')[0])
+    setTs(actualDate)
   }
 
   return (
-    <Container height="100vh">
+    <Container height="100vh" css={css`
+    --rdp-cell-size: 2rem;
+    --rdp-accent-color: var(--chakra-colors-blue-500);
+    --rdp-background-color: var(--chakra-colors-blue-200);
+  `}>
       <Head>
         <title>Ethereum FOMO Club</title>
         <link rel="icon" href="favicon.ico" />
@@ -77,7 +99,8 @@ const Index = () => {
           onSubmit={(values, actions) => {
             setTimeout(async () => {
               const { ts, amount } = values;
-              const response = await (await fetch(`/api/${ts}`)).json()
+              const actualTs = ts.toISOString().split('T')[0]
+              const response = await (await fetch(`/api/${actualTs}`)).json()
               console.log("Response", response);
               setMoneyz(amount/response.then.amount * response.today.amount)
               actions.setSubmitting(false)
@@ -127,7 +150,14 @@ const Index = () => {
                         fontSize="1.2em"
                         children={<CalendarIcon />}
                       />
-                      <Input {...field} value={form.values.ts} id="ts" placeholder="2015-05-30" />
+                      <Popover>
+                        <PopoverTrigger>
+                          <Input pl="2.5rem" {...input.fieldProps} value={ts.toDateString()} id="ts" placeholder={format(form.values.ts, options.format)} />
+                        </PopoverTrigger>
+                        <PopoverContent>
+                          <DayPicker {...input.dayPickerProps} mode="single" onSelect={setTs} />
+                        </PopoverContent>
+                      </Popover>                      
                       <InputRightElement width="12.5rem" mr="5px">
                         <ButtonGroup size="sm" isAttached>
                           <Button h="1.75rem" size="sm" onClick={() => handleClick('year')}>
@@ -160,6 +190,9 @@ const Index = () => {
 
       </Hero>
       <DarkModeSwitch />
+      <Flex as="footer" pt="4rem" pb="2rem">
+        <Text>By <ChakraLink textDecoration="underline" isExternal href="https://jjperezaguinaga.com/" flexGrow={1}>Jose Aguinaga</ChakraLink>, for the <ChakraLink textDecoration="underline" isExternal href="https://kernel.community/en/" flexGrow={1}>KERNEL Community</ChakraLink></Text>
+      </Flex>
     </Container>
   )
 }
