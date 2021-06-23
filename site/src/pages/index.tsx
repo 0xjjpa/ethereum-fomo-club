@@ -186,7 +186,7 @@ const Index = () => {
                   </FormControl>
                 )}
               </Field>
-              <Text mt="10px">you would had have now <Badge colorScheme="green">{
+              <Text mt="10px">you would have now <Badge colorScheme="green">{
                 moneyz == 0 ? '$ USD' : `$ ${moneyz.toFixed(2)} USD`
               }</Badge></Text>
               <Button
