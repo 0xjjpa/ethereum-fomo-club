@@ -41,7 +41,7 @@ const options: UseInputOptions = {
   // Limit the valid dates
   fromYear: 2015,
   toYear: 2021,
-  format: "PP",
+  format: "P",
   // Make the selection mandatory.
   required: true
 };
@@ -165,7 +165,7 @@ const Index = () => {
                       />
                       <Popover>
                         <PopoverTrigger>
-                          <Input pl="2.5rem" {...input.fieldProps} value={ts.toDateString()} id="ts" placeholder={format(form.values.ts, options.format)} />
+                          <Input pl="2.5rem" {...input.fieldProps} value={format(ts, options.format)} id="ts" placeholder={format(form.values.ts, options.format)} />
                         </PopoverTrigger>
                         <PopoverContent>
                           <DayPicker {...input.dayPickerProps} mode="single" onSelect={setTs} />
@@ -203,8 +203,8 @@ const Index = () => {
 
       </Hero>
       <DarkModeSwitch />
-      <Flex as="footer" pt="4rem" pb="2rem">
-        <Text>By <ChakraLink textDecoration="underline" isExternal href="https://jjperezaguinaga.com/" flexGrow={1}>Jose Aguinaga</ChakraLink>, for the <ChakraLink textDecoration="underline" isExternal href="https://kernel.community/en/" flexGrow={1}>KERNEL Community</ChakraLink></Text>
+      <Flex as="footer" pt="4rem" pb="2rem" maxWidth="80%" textAlign="center">
+        <Text>By <ChakraLink textDecoration="underline" isExternal href="https://jjperezaguinaga.com/" flexGrow={1}>Jose Aguinaga</ChakraLink>, for the <ChakraLink textDecoration="underline" isExternal href="https://kernel.community/en/" flexGrow={1}>KERNEL Community</ChakraLink>, hosted by our friends at <ChakraLink textDecoration="underline" isExternal href="https://fleek.co/" flexGrow={1}>Fleek</ChakraLink> using <ChakraLink textDecoration="underline" isExternal href="https://ipfs.io" flexGrow={1}>IPFS</ChakraLink></Text>
       </Flex>
     </Container>
   )
