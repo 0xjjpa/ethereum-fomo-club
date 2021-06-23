@@ -15,6 +15,7 @@ import Head from 'next/head'
 import { DayPicker, useInput, UseInputOptions } from "react-day-picker";
 import "react-day-picker/style.css";
 import { format } from "date-fns";
+import { NextSeo } from 'next-seo';
 import { css } from "@emotion/react";
 
 
@@ -91,6 +92,38 @@ const Index = () => {
         <title>Ethereum FOMO Club</title>
         <link rel="icon" href="favicon.ico" />
       </Head>
+      <NextSeo
+      title="Ethereum FOMO Club"
+      description="You knew you should had invested."
+      canonical="https://ethereumfomo.club/"
+      openGraph={{
+        url: 'https://ethereumfomo.club/',
+        title: 'Ethereum FOMO Club',
+        description: 'You knew you should had invested.',
+        images: [
+          {
+            url: 'https://ethereumfomo.club/ethereum-fomo-club.png',
+            width: 1280,
+            height: 640,
+            alt: 'Ethereum FOMO Club',
+          },
+          {
+            url: 'https://ethereumfomo.club/android-chrome-512x512.png',
+            width: 512,
+            height: 512,
+            alt: 'Ethereum FOMO Club Icon',
+          },
+          { url: 'https://www.example.ie/og-image-03.jpg' },
+          { url: 'https://www.example.ie/og-image-04.jpg' },
+        ],
+        site_name: 'Ethereum FOMO Club',
+      }}
+      twitter={{
+        handle: '@jjperezaguinaga',
+        site: '@jjperezaguinaga',
+        cardType: 'summary_large_image',
+      }}
+    />
 
       <Hero>
         <Text>
